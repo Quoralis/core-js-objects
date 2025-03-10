@@ -163,8 +163,36 @@ function makeWord(lettersObject) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let money25 = 0;
+  let money50 = 0;
+  let canSell = true;
+
+  queue.forEach((bill) => {
+    if (!canSell) return;
+
+    if (bill === 25) {
+      money25 += 1;
+    } else if (bill === 50) {
+      if (money25 === 0) {
+        canSell = false;
+      } else {
+        money25 -= 1;
+        money50 += 1;
+      }
+    } else if (bill === 100) {
+      if (money50 > 0 && money25 > 0) {
+        money50 -= 1;
+        money25 -= 1;
+      } else if (money25 >= 3) {
+        money25 -= 3;
+      } else {
+        canSell = false;
+      }
+    }
+  });
+
+  return canSell;
 }
 
 /**
@@ -180,8 +208,13 @@ function sellTickets(/* queue */) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+
+  this.getArea = () => {
+    return this.height * this.width;
+  };
 }
 
 /**
@@ -194,8 +227,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { height: 10, width: 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
@@ -209,8 +242,11 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const objParse = JSON.parse(json);
+  const obj = Object.create(proto);
+  Object.assign(obj, objParse);
+  return obj;
 }
 
 /**
@@ -239,8 +275,14 @@ function fromJSON(/* proto, json */) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
+function sortCitiesArray(arr) {
+  return arr.sort((a, b) => {
+    const arr2 = a.country.localeCompare(b.country);
+    if (arr2 === 0) {
+      return a.city.localeCompare(b.city);
+    }
+    return arr2;
+  });
 }
 
 /**
